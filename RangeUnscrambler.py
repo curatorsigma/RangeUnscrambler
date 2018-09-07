@@ -65,6 +65,19 @@ maxofdice = (1, 2, 3, 4, 6, 8, 10, 12, 20)  # die type
 numofdice = [0, 0, 0, 0, 0, 0, 0, 0, 0]  # how many you have to roll
 expectofdice = (1, 1.5, 2, 2.5, 3.5, 4.5, 5.5, 6.5, 10.5)  # E(die)
 varofdice = (0, 0.25, 0.66, 1.25, 2.917, 5.25, 8.25, 11.92, 33.25)  # Var(die)
+
+purge3 = [Transform(State([0, 1, 1, 0, 0, 0, 0, 0, 0]), State([1, 0, 0, 1, 0, 0, 0, 0, 0])),
+          Transform(State([0, 0, 1, 1, 0, 0, 0, 0, 0]), State([1, 0, 0, 0, 1, 0, 0, 0, 0])),
+          Transform(State([0, 0, 1, 0, 1, 0, 0, 0, 0]), State([1, 0, 0, 0, 0, 1, 0, 0, 0])),
+          Transform(State([0, 0, 1, 0, 0, 1, 0, 0, 0]), State([1, 0, 0, 0, 0, 0, 1, 0, 0])),
+          Transform(State([0, 0, 1, 0, 0, 0, 1, 0, 0]), State([1, 0, 0, 0, 0, 0, 0, 1, 0]))]
+purge2 = [
+          Transform(State([0, 11, 0, 0, 0, 0, 0, 0, 0]), State([10, 0, 0, 0, 0, 0, 0, 1, 0])),
+          Transform(State([0, 9, 0, 0, 0, 0, 0, 0, 0]), State([8, 0, 0, 0, 0, 0, 1, 0, 0])),
+          Transform(State([0, 7, 0, 0, 0, 0, 0, 0, 0]), State([6, 0, 0, 0, 0, 1, 0, 0, 0])),
+          Transform(State([0, 5, 0, 0, 0, 0, 0, 0, 0]), State([4, 0, 0, 0, 1, 0, 0, 0, 0])),
+          Transform(State([0, 3, 0, 0, 0, 0, 0, 0, 0]), State([2, 0, 0, 1, 0, 0, 0, 0, 0])),
+          ]
 chdict = {
     1: [Transform(State([0, 0, 0, 0, 0, 1, 0, 0, 0]), State([0, 0, 0, 2, 0, 0, 0, 0, 0])),
         Transform(State([0, 0, 0, 0, 0, 0, 0, 1, 0]), State([0, 0, 0, 0, 2, 0, 0, 0, 0])),
@@ -158,6 +171,7 @@ def unscramble(minval, maxval, percentile=True):
                 return f"Range can not be resolved. {randint(minval, maxval)} is a random number in it."
             deficit = minval - dicestate.calcmin()
             continue
+        purgehalfdice(dicestate)
         return buildresult(dicestate), dicestate
 
 
@@ -169,6 +183,26 @@ def buildresult(state):  # string representation of solution
     if state.numofdicelist[0]:
         resultstring.append(f"{state.numofdicelist[0]}")
     return "Roll " + " + ".join(resultstring)
+
+
+def purgehalfdice(state):
+    if not state.numofdicelist[1]:
+        if not state.numofdicelist[2]:
+            return
+        else:
+            tempflag = True
+            while tempflag:
+                for trans in purge3:
+                    tempflag = state.transform(trans)
+                    if tempflag:
+                        break
+            tempflag = True
+            while tempflag:
+                for trans in purge3:
+                    tempflag = state.transform(trans)
+                    if tempflag:
+                        break
+            return
 
 if __name__ == "__main__":
     print("Welcome to the Range Unscrambler. \n"
@@ -190,7 +224,7 @@ if __name__ == "__main__":
                       "seperated by a single space." + "\n")
         print("\n")
         if instr == "r" or instr == "R":    # generate random number
-            print(randint(minval, maxval), " is in the given Range.")
+            print((minval, maxval), " is in the given Range.")
             continue
         elif instr == "p" or instr == "P":  # change percentilemode
             percentilemode = not percentilemode
