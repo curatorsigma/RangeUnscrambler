@@ -11,4 +11,4 @@ You can switch to verbose mode with v. The verbose mode shows Standard Deviation
 
 You can disable Solutions like "Roll 1d100, reroll 67 and higher" with p.
 
-*Note that about 5.5% of randomly chosen Intervals will not successfully be resolved. Instead a random Integer is created inside the given Interval.*
+*Note that about 6% of randomly chosen Intervals will not successfully be resolved(sample size 100,000 as in UnscrambleTester.py). Instead a random Integer is created inside the given Interval.*
