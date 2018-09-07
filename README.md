@@ -1,4 +1,7 @@
 # RangeUnscrambler
+
+This Python-Script was build and tested using python 3.6.5.
+
 Calculate what dice to roll for the results to fill a given range.
 
 
